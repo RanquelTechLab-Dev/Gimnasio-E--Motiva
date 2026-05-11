@@ -12,17 +12,17 @@ export function LoginPage() {
           <div className="space-y-4">
             <label className="block">
               <span className="text-sm font-semibold text-slate-700">Email</span>
-              <input className="mt-1 w-full rounded-2xl border border-slate-300 px-4 py-3" placeholder="brunicarolina98@gmail.com" />
+              <input className="mt-1 w-full rounded-2xl border border-slate-300 px-4 py-3" placeholder="tu@email.com" />
             </label>
             <label className="block">
               <span className="text-sm font-semibold text-slate-700">Contraseña</span>
-              <input className="mt-1 w-full rounded-2xl border border-slate-300 px-4 py-3" placeholder="Contraseña provisoria" type="password" />
+              <input className="mt-1 w-full rounded-2xl border border-slate-300 px-4 py-3" placeholder="Tu contraseña" type="password" />
             </label>
             <button className="w-full rounded-2xl bg-emotiva-600 px-4 py-3 font-semibold text-white shadow-sm hover:bg-emotiva-700">
               Entrar
             </button>
             <p className="text-xs leading-5 text-slate-500">
-              Placeholder visual: todavía no autentica usuarios ni conecta Supabase.
+              Vista inicial: el acceso real con Supabase se conecta en el bloque de autenticación.
             </p>
           </div>
         </PageCard>
