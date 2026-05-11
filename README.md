@@ -23,7 +23,8 @@ Los alumnos podrán ingresar desde celular, computadora o tablet para ver calend
 ## Stack definido
 
 - React + Vite + TypeScript
-- Tailwind CSS
+- Tailwind CSS con plugin oficial de Vite
+- React Router
 - Supabase Auth + Postgres + RLS + Edge Functions
 - GitHub como repositorio
 - Linear como organización del trabajo por bloques
@@ -36,7 +37,77 @@ Los alumnos podrán ingresar desde celular, computadora o tablet para ver calend
 
 El desarrollo se ejecuta por bloques chicos y trazables en Linear.
 
-Bloque actual: `RAN-5 — Preparación y alineación del proyecto`.
+Bloque actual: `RAN-6 — Setup frontend React/Vite/TypeScript/Tailwind`.
+
+Rama actual del bloque:
+
+```bash
+feature/ran-6-frontend-setup
+```
+
+## Comandos locales
+
+Instalar dependencias:
+
+```bash
+npm install
+```
+
+Levantar entorno local:
+
+```bash
+npm run dev
+```
+
+Crear build de producción:
+
+```bash
+npm run build
+```
+
+Previsualizar build:
+
+```bash
+npm run preview
+```
+
+Lint:
+
+```bash
+npm run lint
+```
+
+## Rutas iniciales RAN-6
+
+Alumno:
+
+- `/login`
+- `/app`
+- `/app/calendar`
+- `/app/my-bookings`
+- `/app/my-plan`
+- `/app/profile`
+
+Admin:
+
+- `/admin`
+- `/admin/students`
+- `/admin/payments`
+- `/admin/calendar`
+- `/admin/attendance`
+- `/admin/plans`
+- `/admin/emails`
+- `/admin/storage`
+- `/admin/settings`
+
+## Cloudflare Pages
+
+Configuración prevista para deploy posterior:
+
+```txt
+Build command: npm run build
+Output directory: dist
+```
 
 ## Reglas principales
 
