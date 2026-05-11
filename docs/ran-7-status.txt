@@ -1,0 +1,1 @@
+RAN-7 in progress. Supabase base schema applied. RLS enabled. Security advisor clean.
