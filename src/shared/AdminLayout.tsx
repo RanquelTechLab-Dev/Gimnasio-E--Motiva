@@ -1,4 +1,5 @@
 import { NavLink, Outlet } from 'react-router-dom';
+import { SessionBadge } from '../auth/SessionBadge';
 
 const adminLinks = [
   { to: '/admin', label: 'Hoy', end: true },
@@ -18,6 +19,7 @@ export function AdminLayout() {
       <header className="mb-4 rounded-3xl bg-slate-950 p-4 text-white shadow-sm">
         <p className="text-xs font-semibold uppercase tracking-[0.25em] text-emotiva-100">E-Motiva</p>
         <h1 className="text-2xl font-bold">Panel de administración</h1>
+        <SessionBadge variant="dark" />
         <nav className="mt-4 flex gap-2 overflow-x-auto pb-1">
           {adminLinks.map((link) => (
             <NavLink
