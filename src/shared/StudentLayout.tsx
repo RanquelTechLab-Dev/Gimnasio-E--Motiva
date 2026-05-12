@@ -1,4 +1,5 @@
 import { NavLink, Outlet } from 'react-router-dom';
+import { SessionBadge } from '../auth/SessionBadge';
 
 const studentLinks = [
   { to: '/app', label: 'Inicio', end: true },
@@ -14,6 +15,7 @@ export function StudentLayout() {
       <header className="mb-4 rounded-3xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
         <p className="text-xs font-semibold uppercase tracking-[0.25em] text-emotiva-600">E-Motiva</p>
         <h1 className="text-2xl font-bold text-slate-950">Panel del alumno</h1>
+        <SessionBadge />
         <nav className="mt-4 flex gap-2 overflow-x-auto pb-1">
           {studentLinks.map((link) => (
             <NavLink
