@@ -7,9 +7,9 @@ type ProtectedRouteProps = {
 
 export function ProtectedRoute({ requireAdmin = false }: ProtectedRouteProps) {
   const location = useLocation();
-  const { user, profile, loading, profileLoading } = useAuth();
+  const { user, profile, loading, profileLoading, profileResolved } = useAuth();
 
-  if (loading || profileLoading) {
+  if (loading || profileLoading || (user && !profileResolved)) {
     return (
       <div className="flex min-h-screen items-center justify-center px-4 text-center">
         <div>
