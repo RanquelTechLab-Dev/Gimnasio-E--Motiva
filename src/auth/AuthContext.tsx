@@ -1,5 +1,5 @@
 import type { Session, User } from '@supabase/supabase-js';
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { supabase } from '../lib/supabase';
 import { fetchUserProfile } from './profile';
 import type { UserProfile } from './types';
@@ -28,7 +28,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [loading, setLoading] = useState(true);
   const [profileLoading, setProfileLoading] = useState(false);
 
-  const loadProfile = async (authUserId: string) => {
+  const loadProfile = useCallback(async (authUserId: string) => {
     setProfileLoading(true);
     try {
       const nextProfile = await fetchUserProfile(authUserId);
@@ -36,16 +36,26 @@ export function AuthProvider({ children }: AuthProviderProps) {
     } finally {
       setProfileLoading(false);
     }
-  };
+  }, []);
 
-  const refreshProfile = async () => {
+  const refreshProfile = useCallback(async () => {
     if (!user) {
       setProfile(null);
       return;
     }
 
     await loadProfile(user.id);
-  };
+  }, [loadProfile, user]);
+
+  const signIn = useCallback(async (email: string, password: string) => {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+  }, []);
+
+  const signOut = useCallback(async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
+  }, []);
 
   useEffect(() => {
     let alive = true;
@@ -79,7 +89,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
 
     void loadProfile(user.id);
-  }, [user]);
+  }, [loadProfile, user]);
 
   const value = useMemo<AuthContextValue>(
     () => ({
@@ -88,17 +98,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
       profile,
       loading,
       profileLoading,
-      signIn: async (email: string, password: string) => {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-      },
-      signOut: async () => {
-        const { error } = await supabase.auth.signOut();
-        if (error) throw error;
-      },
+      signIn,
+      signOut,
       refreshProfile,
     }),
-    [user, session, profile, loading, profileLoading],
+    [user, session, profile, loading, profileLoading, signIn, signOut, refreshProfile],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
