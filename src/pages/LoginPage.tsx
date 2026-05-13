@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../auth/AuthContext';
+import { Navigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../auth/useAuth';
 import { PageCard } from '../components/PageCard';
 
 type LocationState = {
@@ -14,7 +14,6 @@ function getRedirectPath(role?: string, fallback?: string) {
 }
 
 export function LoginPage() {
-  const navigate = useNavigate();
   const location = useLocation();
   const { user, profile, loading, profileLoading, signIn } = useAuth();
   const locationState = location.state as LocationState | null;
@@ -34,7 +33,6 @@ export function LoginPage() {
 
     try {
       await signIn(email.trim(), password);
-      navigate(locationState?.from ?? '/app', { replace: true });
     } catch (signInError) {
       setError(signInError instanceof Error ? signInError.message : 'No se pudo iniciar sesión.');
     } finally {

@@ -1,22 +1,9 @@
 import type { Session, User } from '@supabase/supabase-js';
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { supabase } from '../lib/supabase';
+import { AuthContext, type AuthContextValue } from './auth-context';
 import { fetchUserProfile } from './profile';
 import type { UserProfile } from './types';
-
-type AuthContextValue = {
-  user: User | null;
-  session: Session | null;
-  profile: UserProfile | null;
-  loading: boolean;
-  profileLoading: boolean;
-  profileResolved: boolean;
-  signIn: (email: string, password: string) => Promise<void>;
-  signOut: () => Promise<void>;
-  refreshProfile: () => Promise<void>;
-};
-
-const AuthContext = createContext<AuthContextValue | null>(null);
 
 type AuthProviderProps = {
   children: ReactNode;
@@ -68,19 +55,27 @@ export function AuthProvider({ children }: AuthProviderProps) {
     supabase.auth.getSession().then(({ data }) => {
       if (!alive) return;
 
+      const currentUser = data.session?.user ?? null;
       setSession(data.session);
-      setUser(data.session?.user ?? null);
+      setUser(currentUser);
       setLoading(false);
-      if (!data.session?.user) {
+
+      if (currentUser) {
+        void loadProfile(currentUser.id);
+      } else {
         setProfileResolved(true);
       }
     });
 
     const { data: listener } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+      const nextUser = nextSession?.user ?? null;
       setSession(nextSession);
-      setUser(nextSession?.user ?? null);
+      setUser(nextUser);
       setProfileResolved(false);
-      if (!nextSession?.user) {
+
+      if (nextUser) {
+        void loadProfile(nextUser.id);
+      } else {
         setProfile(null);
         setProfileResolved(true);
       }
@@ -90,16 +85,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       alive = false;
       listener.subscription.unsubscribe();
     };
-  }, []);
-
-  useEffect(() => {
-    if (!user) {
-      setProfile(null);
-      return;
-    }
-
-    void loadProfile(user.id);
-  }, [loadProfile, user]);
+  }, [loadProfile]);
 
   const value = useMemo<AuthContextValue>(
     () => ({
@@ -117,14 +103,4 @@ export function AuthProvider({ children }: AuthProviderProps) {
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}
-
-export function useAuth() {
-  const context = useContext(AuthContext);
-
-  if (!context) {
-    throw new Error('useAuth debe usarse dentro de AuthProvider.');
-  }
-
-  return context;
 }
